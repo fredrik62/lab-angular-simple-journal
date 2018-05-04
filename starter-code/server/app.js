@@ -8,20 +8,22 @@ const layouts      = require('express-ejs-layouts');
 const mongoose     = require('mongoose');
 const cors         = require('cors');
 
-mongoose.connect('mongodb://localhost/journal-development');
-
 const app = express();
 
-app.use(cors());
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+mongoose.Promise = Promise;
+mongoose.connect('mongodb://localhost/journal-development', {
+  keepAlive: true,
+  reconnectTries: Number.MAX_VALUE
+});
 
-// default value for title local
-app.locals.title = 'Express - Generated with IronGenerator';
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(cors({
+  credentials: true,
+  origin: ['http://localhost:4200']
+}));
+
+
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -29,28 +31,23 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(layouts);
 
-const index = require('./routes/index');
-app.use('/', index);
+const API = require('./api/journal-entries');
+app.use('/api', API);
 
-app.all('/*', function (req, res) {
-  res.sendfile(__dirname + '/public/index.html');
-});
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  res.status(404).json({code: 'not-found'});
 });
 
-// error handler
 app.use((err, req, res, next) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // always log the error
+  console.error('ERROR', req.method, req.path, err);
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // only render if the error ocurred before sending the response
+  if (!res.headersSent) {
+    res.status(500).json({code: 'unexpected'});
+  }
 });
 
 module.exports = app;

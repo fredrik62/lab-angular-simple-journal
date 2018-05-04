@@ -50,3 +50,7 @@ JournalEntry.create(entries, (err, entries) => {
   console.log("Success", entries);
   mongoose.connection.close();
 })
+
+
+
+
