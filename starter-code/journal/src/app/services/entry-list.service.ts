@@ -17,4 +17,12 @@ export class EntryListService {
       .toPromise();
   }
 
+
+  getOne(id) : Promise<any> {
+    const options = {
+      withCredentials: true
+    };
+    return this.httpClient.get(`${this.baseUrl}/api/journal-entries/${id}`, options)
+      .toPromise();
+  }
 }

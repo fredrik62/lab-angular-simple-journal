@@ -7,19 +7,21 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { EntryListComponent } from './components/entry-list/entry-list.component';
 import { EntryListService } from './services/entry-list.service';
+import { EntryDetailComponent } from './components/entry-detail/entry-detail.component';
 
 
 const routes: Routes = [
   { path: '',  redirectTo: '/entries', pathMatch: 'full' },
-  { path: 'entries',  component: EntryListComponent }
- // { path: 'entries/:id', component: EntryDetailComponent },
+  { path: 'entries',  component: EntryListComponent },
+  { path: 'entries/:id', component: EntryDetailComponent }
  // { path: 'movies/create', component: MovieCreatePageComponent }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    EntryListComponent
+    EntryListComponent,
+    EntryDetailComponent
   ],
   imports: [
     BrowserModule,

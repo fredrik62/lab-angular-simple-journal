@@ -1,6 +1,7 @@
 <div *ngFor="let info of list">
-{{info.title}}
-{{info.date}}
-{{info._id}}
+  {{info.title}}
+  {{info.date}}
 
+
+  <a [routerLink]="['/entries', info._id]">a</a>
 </div>
